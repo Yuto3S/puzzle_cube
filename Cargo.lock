@@ -3,5 +3,14 @@
 version = 3
 
 [[package]]
+name = "benchmarking"
+version = "0.4.12"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "32842502e72b27b30b2681692d16bf47a8a375c5a2795613f0dc699bed9a48bb"
+
+[[package]]
 name = "puzzle_cube"
 version = "0.1.0"
+dependencies = [
+ "benchmarking",
+]
