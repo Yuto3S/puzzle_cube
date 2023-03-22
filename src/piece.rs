@@ -14,6 +14,8 @@ pub struct Piece {
     pub block_5: Coordinates,
 }
 
+
+// Those pieces/coordinates can be visually seen in https://github.com/Yuto3S/puzzle_cube/blob/master/src/assets/24_default.png
 const ALL_DEFAULT_PIECES_COORDINATES: [[(i8, i8, i8); 5] ; 24] = [
     [(0, 0, 0), (1, 0, 0), (2, 0, 0), (2, 0, 1), (3, 0, 0)],
     [(0, 1, 0), (1, 1, 0), (2, 0, 0), (2, 1, 0), (3, 1, 0)],
