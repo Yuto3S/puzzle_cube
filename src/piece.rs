@@ -1,11 +1,11 @@
-#[derive(Debug, Copy, Clone)]
+#[derive(Ord, Eq, PartialOrd, PartialEq, Debug, Copy, Clone)]
 pub struct Coordinates {
     pub x: i8,
     pub y: i8,
     pub z: i8,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(PartialEq, Debug, Copy, Clone)]
 pub struct Piece {
     pub block_1: Coordinates,
     pub block_2: Coordinates,
@@ -56,4 +56,15 @@ pub fn get_all_default_pieces() -> [Piece; 24] {
     ).collect::<Vec<Piece>>().try_into().unwrap();
     
     return default_pieces;
+}
+
+pub fn are_pieces_overlapping(piece_1: Piece, piece_2: Piece) -> bool {
+    let mut blocks: Vec<Coordinates> = vec![
+        piece_1.block_1, piece_1.block_2, piece_1.block_3, piece_1.block_4, piece_1.block_5,
+        piece_2.block_1, piece_2.block_2, piece_2.block_3, piece_2.block_4, piece_2.block_5,
+    ];
+    blocks.sort();
+    blocks.dedup();
+
+    return blocks.len() < 10;
 }
