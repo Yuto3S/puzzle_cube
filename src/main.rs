@@ -1,5 +1,7 @@
 use crate::piece::Piece;
 
+mod find_solution;
+mod overlaps;
 mod piece;
 
 fn main() {
@@ -24,6 +26,17 @@ fn main() {
     }
 
     assert_eq!(960, all_generated_pieces.len());
+
+    let all_overlaps = overlaps::get_all_overlaps(all_generated_pieces);
+
+    // println!("{} - all_overlaps.len()", all_overlaps.len());
+    // for overlap in all_overlaps.iter() {
+    //     println!("{:?}", overlap);
+    // }
+    println!("{:?}", all_overlaps[&0]);
+
+    // find_solution::find_solution_from_overlaps(&all_overlaps);
+    overlaps::get_all_overlaps_as_pairs(all_overlaps);
 }
 
 fn test_benchmark_given_function() -> () {

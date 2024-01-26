@@ -261,3 +261,140 @@ pub fn generate_all_pieces_from_translating(piece: Piece) -> Vec<Piece> {
 
     return all_pieces_by_translation;
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn get_test_default_piece() -> Piece {
+        let coordinates: [Coordinates; 5] = [
+            Coordinates { x: 0, y: 0, z: 0 },
+            Coordinates { x: 0, y: 0, z: 1 },
+            Coordinates { x: 0, y: 0, z: 2 },
+            Coordinates { x: 0, y: 1, z: 2 },
+            Coordinates { x: 0, y: 0, z: 3 },
+        ];
+
+        let piece: Piece = Piece {
+            block_1: coordinates[0],
+            block_2: coordinates[1],
+            block_3: coordinates[2],
+            block_4: coordinates[3],
+            block_5: coordinates[4],
+        };
+
+        return piece;
+    }
+
+    #[test]
+    fn test_create_coordinates() {
+        let coordinates: Coordinates = Coordinates { x: 1, y: 2, z: 3 };
+        assert_eq!(1, coordinates.x);
+        assert_eq!(2, coordinates.y);
+        assert_eq!(3, coordinates.z);
+    }
+
+    #[test]
+    fn test_create_piece() {
+        let coordinates: [Coordinates; 5] = [
+            Coordinates { x: 0, y: 0, z: 0 },
+            Coordinates { x: 0, y: 0, z: 1 },
+            Coordinates { x: 0, y: 0, z: 2 },
+            Coordinates { x: 0, y: 1, z: 2 },
+            Coordinates { x: 0, y: 0, z: 3 },
+        ];
+
+        let piece: Piece = Piece {
+            block_1: coordinates[0],
+            block_2: coordinates[1],
+            block_3: coordinates[2],
+            block_4: coordinates[3],
+            block_5: coordinates[4],
+        };
+
+        assert_eq!(piece.block_1, coordinates[0]);
+        assert_eq!(piece.block_2, coordinates[1]);
+        assert_eq!(piece.block_3, coordinates[2]);
+        assert_eq!(piece.block_4, coordinates[3]);
+        assert_eq!(piece.block_5, coordinates[4]);
+    }
+
+    #[test]
+    fn test_is_valid_piece_is_true() {
+        let piece = get_test_default_piece();
+        assert_eq!(true, piece.is_valid());
+    }
+
+    #[test]
+    fn test_is_valid_piece_is_false_if_coordinate_higher_than_4() {
+        let mut piece = get_test_default_piece();
+        piece.block_4.y = 5;
+        assert_eq!(false, piece.is_valid());
+    }
+
+    #[test]
+    fn test_pieces_contains_block_is_true() {
+        let piece: Piece = get_test_default_piece();
+        assert_eq!(true, piece.contains(&Coordinates { x: 0, y: 0, z: 0 }));
+        assert_eq!(true, piece.contains(&Coordinates { x: 0, y: 0, z: 1 }));
+        assert_eq!(true, piece.contains(&Coordinates { x: 0, y: 0, z: 2 }));
+        assert_eq!(true, piece.contains(&Coordinates { x: 0, y: 1, z: 2 }));
+        assert_eq!(true, piece.contains(&Coordinates { x: 0, y: 0, z: 3 }));
+    }
+
+    #[test]
+    fn test_pieces_contains_block_is_false() {
+        let piece: Piece = get_test_default_piece();
+        assert_eq!(false, piece.contains(&Coordinates { x: 4, y: 4, z: 4 }));
+        assert_eq!(false, piece.contains(&Coordinates { x: 0, y: 2, z: 1 }));
+        assert_eq!(false, piece.contains(&Coordinates { x: 0, y: 0, z: 4 }));
+        assert_eq!(false, piece.contains(&Coordinates { x: 1, y: 1, z: 1 }));
+    }
+
+    #[test]
+    fn test_get_all_default_pieces_only_creates_valid_pieces() {
+        let all_default_pieces: [Piece; 24] = get_all_default_pieces();
+        for piece in all_default_pieces.iter() {
+            assert_eq!(true, piece.is_valid());
+        }
+    }
+
+    #[test]
+    fn test_pieces_are_overlapping_is_false() {
+        let piece_1 = Piece {
+            block_1: Coordinates { x: 0, y: 0, z: 0 },
+            block_2: Coordinates { x: 0, y: 0, z: 1 },
+            block_3: Coordinates { x: 0, y: 0, z: 2 },
+            block_4: Coordinates { x: 0, y: 1, z: 2 },
+            block_5: Coordinates { x: 0, y: 0, z: 3 },
+        };
+        let piece_2 = Piece {
+            block_1: Coordinates { x: 1, y: 0, z: 0 },
+            block_2: Coordinates { x: 1, y: 0, z: 1 },
+            block_3: Coordinates { x: 1, y: 0, z: 2 },
+            block_4: Coordinates { x: 1, y: 1, z: 2 },
+            block_5: Coordinates { x: 1, y: 0, z: 3 },
+        };
+
+        assert_eq!(false, are_pieces_overlapping(piece_1, piece_2));
+    }
+
+    #[test]
+    fn test_pieces_are_overlapping_is_true() {
+        let piece_1 = Piece {
+            block_1: Coordinates { x: 0, y: 0, z: 0 },
+            block_2: Coordinates { x: 0, y: 0, z: 1 },
+            block_3: Coordinates { x: 0, y: 0, z: 2 },
+            block_4: Coordinates { x: 0, y: 1, z: 2 },
+            block_5: Coordinates { x: 0, y: 0, z: 3 },
+        };
+        let piece_2 = Piece {
+            block_1: Coordinates { x: 0, y: 1, z: 2 },
+            block_2: Coordinates { x: 0, y: 0, z: 2 },
+            block_3: Coordinates { x: 0, y: 1, z: 0 },
+            block_4: Coordinates { x: 0, y: 1, z: 1 },
+            block_5: Coordinates { x: 0, y: 1, z: 3 },
+        };
+        assert_eq!(true, are_pieces_overlapping(piece_1, piece_2));
+    }
+}
